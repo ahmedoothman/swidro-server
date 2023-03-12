@@ -1,7 +1,6 @@
 const { PythonShell } = require('python-shell');
 const catchAsync = require('../utils/catchAsync');
 const { spawn } = require('child_process');
-let modelResultLabel = 'Normal';
 // devices buffer
 let devicesBuffer = {};
 const passToAIModel = (data, id) => {
@@ -48,7 +47,7 @@ exports.updateDeviceStatus = catchAsync(async (req, res, next) => {
     setTimeout(() => {
         res.status(200).json({
             status: 'success',
-            swimmerStatus: deviceStatus.swimmerStatusDescription,
+            swimmerStatus: deviceStatus.swimmerStatus,
         });
     }, 2000);
 });

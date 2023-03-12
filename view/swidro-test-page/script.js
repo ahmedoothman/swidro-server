@@ -39,12 +39,19 @@ const showSwimmerStatus = () => {
     if (swimmerStatus === 'Drowning') {
         DrowningLable.style.display = 'block';
         NormalLable.style.display = 'none';
-        DrowningLable.innerHTML = swimmerStatusDescription;
+        if (swimmerStatusDescription) {
+            DrowningLable.innerHTML = swimmerStatusDescription;
+        } else {
+            DrowningLable.innerHTML = 'Drowning';
+        }
     } else {
         DrowningLable.style.display = 'none';
         NormalLable.style.display = 'block';
-        NormalLable.innerHTML = swimmerStatusDescription;
-        console.log(swimmerStatusDescription);
+        if (swimmerStatusDescription) {
+            NormalLable.innerHTML = swimmerStatusDescription;
+        } else {
+            NormalLable.innerHTML = 'Normal';
+        }
     }
 };
 const getDeviceStatus = () => {
