@@ -4,6 +4,8 @@ const morgan = require('morgan'); // 3rd party middleware
 ////////////////////////////////////////////////////////
 const userRouter = require('./routes/userRoutes');
 const deviceRouter = require('./routes/deviceRoutes');
+const resortRouter = require('./routes/resortRoutes');
+const staffRouter = require('./routes/staffRoutes');
 const errorController = require('./controllers/errorController');
 
 //secuirty
@@ -44,13 +46,10 @@ app.use('/api/img', express.static(`${__dirname}/img`));
 // app.use('/', express.static(`${__dirname}/view/swidro-test-page`));
 app.use('/api/users', userRouter);
 app.use('/api/device', deviceRouter);
-
+app.use('/api/resort', resortRouter);
+app.use('/api/staff', staffRouter);
 //unhandeled routes gets response with this , must be put at the end of the file after all routes
 app.all('*', (req, res, next) => {
-    // res.status(404).json({
-    //     status: 'fail',
-    //     message: `Can't find ${req.originalUrl} on this server`
-    // });
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // node js understand that , when we pass a parameter to next() it means that is an error and will skip all middlewares and send it to the global error handling middleware
 });
 
