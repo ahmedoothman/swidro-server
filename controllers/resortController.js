@@ -22,8 +22,7 @@ exports.createResort = catchAsync(async (req, res, next) => {
     });
 });
 exports.getResort = catchAsync(async (req, res, next) => {
-    // find resort by ownerId
-    const resort = await Resort.findOne({ owner: req.user._id });
+    const resort = await Resort.findById(req.user.resort._id);
     if (!resort) {
         return next(new AppError('No resort found with that ID', 404));
     }

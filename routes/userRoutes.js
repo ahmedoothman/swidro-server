@@ -4,7 +4,7 @@ const router = express.Router();
 const authController = require('./../controllers/authController');
 const userController = require('./../controllers/userController');
 
-router.post('/signup', authController.signup);
+// router.post('/signup', authController.signup); // we use signup to create the user and send the email to verify the email
 router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);

@@ -5,11 +5,11 @@ const authController = require('./../controllers/authController');
 const staffController = require('./../controllers/staffController');
 
 router.use(
-    authController,
+    authController.protect,
     authController.restrictTo('owner', 'manager', 'admin')
 );
 router.post('/addStaff', staffController.addStaff);
-router.get('/allStaff/:id', staffController.getAllStaff);
+router.get('/allStaff', staffController.getAllStaff);
 router
     .route('/:id')
     .get(staffController.getStaff)

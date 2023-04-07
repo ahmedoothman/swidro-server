@@ -7,10 +7,10 @@ const resortController = require('./../controllers/resortController');
 router.post('/signup', authController.signup, resortController.createResort);
 
 router.use(authController.protect);
-router.get('/mine', resortController.getResort);
+router.get('/', resortController.getResort);
+
 router
     .route('/:id')
-    .get(resortController.getResort)
     .patch(resortController.upateResort)
     .delete(resortController.deleteResort);
 

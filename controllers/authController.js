@@ -55,6 +55,7 @@ exports.signup = catchAsync(async (req, res, next) => {
             verifyURL
         ).verifyEmail();
         req.user = newUser;
+        // we pass to the next middleware thar create a resort
         next();
     } catch (err) {
         newUser.accountverifyToken = undefined;

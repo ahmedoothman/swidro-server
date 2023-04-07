@@ -1,5 +1,9 @@
-const { PythonShell } = require('python-shell');
+const Device = require('../model/deviceModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
+
+const { PythonShell } = require('python-shell');
 const { spawn } = require('child_process');
 // devices buffer
 let devicesBuffer = {};
@@ -74,3 +78,36 @@ exports.getDeviceStatus = catchAsync(async (req, res, next) => {
         },
     });
 });
+
+exports.createDevice = catchAsync(async (req, res, next) => {
+    const resortId = req.user.resort._id;
+    const { deviceId } = req.body;
+    if (!deviceId) {
+        return next(new AppError('Please provide deviceId', 400));
+    }
+    const newDeviceFiltered = {
+        deviceId,
+        resort: resortId,
+    };
+    const newDevice = await Device.create(newDeviceFiltered);
+    res.status(200).json({
+        status: 'success',
+        data: {
+            newDevice,
+        },
+    });
+});
+exports.getAllDevices = catchAsync(async (req, res, next) => {
+    const resortId = req.user.resort._id;
+    const devices = await Device.find({ resort: resortId });
+    res.status(200).json({
+        status: 'success',
+        results: devices.length,
+        data: {
+            devices,
+        },
+    });
+});
+exports.getDevice = factory.getOne(Device);
+exports.updateDevice = factory.updateOne(Device);
+exports.deleteDevice = factory.deleteOne(Device);

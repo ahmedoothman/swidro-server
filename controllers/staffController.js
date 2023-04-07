@@ -5,9 +5,10 @@ const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.addStaff = catchAsync(async (req, res, next) => {
-    const { userName, password, passwordConfirm, role, resortId } = req.body;
+    const resortId = req.user.resort._id;
+    const { userName, password, passwordConfirm, role } = req.body;
     const email = new Date().getTime() + '@gmail.com';
-    if (!userName || !password || !passwordConfirm) {
+    if (!userName || !password || !passwordConfirm || !role || !resortId) {
         return next(
             new AppError(
                 'Please provide userName, password and passwordConfirm',
@@ -34,7 +35,7 @@ exports.addStaff = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllStaff = catchAsync(async (req, res, next) => {
-    const staff = await User.find({ resort: req.params.id });
+    const staff = await User.find({ resort: req.user.resort._id });
     if (!staff) {
         return next(new AppError('No staff found with that ID', 404));
     }
