@@ -1,8 +1,8 @@
 const express = require('express');
-const resortController = require('./../controllers/resortController');
-const authController = require('./../controllers/authController');
-
 const router = express.Router();
+
+const authController = require('./../controllers/authController');
+const resortController = require('./../controllers/resortController');
 
 router.post('/signup', authController.signup, resortController.createResort);
 
@@ -14,7 +14,4 @@ router
     .patch(resortController.upateResort)
     .delete(resortController.deleteResort);
 
-router
-    .route('/')
-    .get(authController.restrictTo('admin'), resortController.getAllResorts);
 module.exports = router;

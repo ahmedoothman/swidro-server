@@ -6,6 +6,7 @@ const userRouter = require('./routes/userRoutes');
 const deviceRouter = require('./routes/deviceRoutes');
 const resortRouter = require('./routes/resortRoutes');
 const staffRouter = require('./routes/staffRoutes');
+const adminRouter = require('./routes/adminRoutes');
 const errorController = require('./controllers/errorController');
 
 //secuirty
@@ -48,6 +49,7 @@ app.use('/api/users', userRouter);
 app.use('/api/device', deviceRouter);
 app.use('/api/resort', resortRouter);
 app.use('/api/staff', staffRouter);
+app.use('/api/admin', adminRouter);
 //unhandeled routes gets response with this , must be put at the end of the file after all routes
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // node js understand that , when we pass a parameter to next() it means that is an error and will skip all middlewares and send it to the global error handling middleware

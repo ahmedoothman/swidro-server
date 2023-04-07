@@ -1,9 +1,8 @@
 const express = require('express');
-
-const userController = require('./../controllers/userController');
-const authController = require('./../controllers/authController');
-
 const router = express.Router();
+
+const authController = require('./../controllers/authController');
+const userController = require('./../controllers/userController');
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
@@ -13,7 +12,7 @@ router.patch('/verifyEmail/:token', authController.verifyEmail);
 
 router.use(authController.protect); //all the comming is protected
 
-router.use(authController.restrictTo('owner', 'manager')); //all the comming is protected
+router.use(authController.restrictTo('owner', 'manager')); //all the comming is protected to resorts owners and managers
 
 //must use protect for the comming routes for two reasons , 1) to make sure of the user , 2) and put the info in the req as use
 router.patch('/updateMyPassword', authController.updatePassword);

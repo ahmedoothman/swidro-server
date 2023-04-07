@@ -1,9 +1,8 @@
 const express = require('express');
-
-const staffController = require('./../controllers/staffController');
-const authController = require('./../controllers/authController');
-
 const router = express.Router();
+
+const authController = require('./../controllers/authController');
+const staffController = require('./../controllers/staffController');
 
 router.use(
     authController,

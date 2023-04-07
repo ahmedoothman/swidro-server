@@ -64,6 +64,15 @@ exports.createUser = (req, res) => {
     });
 };
 
+exports.assignRole = catchAsync(async (req, res, next) => {
+    const { role, userId } = req.body;
+
+    await User.findByIdAndUpdate(userId, { role });
+
+    res.status(200).json({
+        status: 'success',
+    });
+});
 exports.getUser = factory.getOne(User);
 exports.getAllUsers = factory.getAll(User);
 
