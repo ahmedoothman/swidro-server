@@ -232,7 +232,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     try {
         new sendEmail(
-            { email: user.email, name: user.name },
+            { email: user.email, name: user.userName },
             resetURL
         ).sendResetPassword();
 

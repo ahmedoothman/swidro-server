@@ -3,29 +3,29 @@ const fs = require('fs/promises');
 const htmlToText = require('html-to-text');
 
 module.exports = class Email {
-    constructor(user,url){
+    constructor(user, url) {
         this.to = user.email;
         this.firstName = user.name.split(' ')[0];
-        this.url =url;
-        this.from =  process.env.EMAIL_USERNAME_Gmail;
+        this.url = url;
+        this.from = process.env.EMAIL_USERNAME_Gmail;
     }
-    newTransport(){
-        if(process.env.NODE_ENV === 'production'){
+    newTransport() {
+        if (process.env.NODE_ENV === 'production') {
             //sendgrid
         }
         return nodemailer.createTransport({
             service: 'gmail',
-            host:process.env.EMAIL_HOST_Gmail,
-            port:process.env.EMAIL_PORT,
-            secure:true,
+            host: process.env.EMAIL_HOST_Gmail,
+            port: process.env.EMAIL_PORT,
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USERNAME_Gmail,
-                pass: process.env.EMAIL_PASSWORD_Gmail
-            }
+                pass: process.env.EMAIL_PASSWORD_Gmail,
+            },
             //activate in gmail "less secure app" option
         });
     }
-   async send(html,subject){
+    async send(html, subject) {
         const mailOptions = {
             from: this.from,
             to: this.to,
@@ -35,28 +35,27 @@ module.exports = class Email {
         };
         await this.newTransport().sendMail(mailOptions);
     }
-    
-    async sendWelcome(){
-        let html = await fs.readFile(`${__dirname}/.././emails/welcomeEmail.html`,'utf-8');
 
-        await this.send(html,'Welcome to Garden Notes');
+    async sendResetPassword() {
+        let html = await fs.readFile(
+            `${__dirname}/.././emails/resetPassword.html`,
+            'utf-8'
+        );
+
+        html = html.replace('#NAME#', this.firstName);
+        html = html.replace('#URL#', this.url);
+        await this.send(html, 'Reset Your Password');
     }
-    async sendResetPassword(){
-        let html = await fs.readFile(`${__dirname}/.././emails/resetPassword.html`,'utf-8');
-        
-        html = html.replace('#NAME#' , this.firstName);
-        html = html.replace('#URL#' , this.url);
-        await this.send(html,'Reset Your Password');
-    }
-    async verifyEmail(){
-        let html = await fs.readFile(`${__dirname}/.././emails/verifyEmail.html`,'utf-8');
-        
-        html = html.replace('#NAME#' , this.firstName);
-        html = html.replace('#URL#' , this.url);
-        await this.send(html,'Verify Your Email');
+    async verifyEmail() {
+        let html = await fs.readFile(
+            `${__dirname}/.././emails/verifyEmail.html`,
+            'utf-8'
+        );
+
+        html = html.replace('#URL#', this.url);
+        await this.send(html, 'Verify Your Email');
     }
 };
-
 
 /*
 const sendEmail = async options => {
