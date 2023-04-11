@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkswidro_app=self.webpackChunkswidro_app||[]).push([[812],{812:function(s,e,n){n.r(e),n.d(e,{default:function(){return u}});var r=n(689),h={},i=n(184),u=function(){return(0,i.jsxs)("div",{className:h.authPages,children:[(0,i.jsx)("h1",{children:"Swidro"}),(0,i.jsx)("h1",{children:"--------------------"}),(0,i.jsx)("h1",{children:"AuthPages"}),(0,i.jsx)(r.j3,{})]})}}}]);
+//# sourceMappingURL=812.d5fb0d31.chunk.js.map
