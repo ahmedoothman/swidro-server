@@ -43,6 +43,11 @@ app.use(
 app.use(cors());
 //routes
 app.use('/api/img', express.static(`${__dirname}/img`));
+// hosting react app
+app.use(express.static(`${__dirname}/view/swidro-app/build`));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/view/swidro-app/build/index.html'));
+});
 // web app
 // app.use('/', express.static(`${__dirname}/view/swidro-test-page`));
 app.use('/api/users', userRouter);
