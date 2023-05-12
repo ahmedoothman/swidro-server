@@ -76,7 +76,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     const verifyToken = await newUser.createAccountVerifyToken();
     await newUser.save({ validateBeforeSave: false });
 
-    const verifyURL = `${appURL}/api/users/verifyEmail/${verifyToken}`;
+    const verifyURL = `${appURL}/verify-email/${verifyToken}`;
     try {
         new sendEmail(
             { email: newUser.email, name: newUser.userName },
@@ -289,7 +289,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     //3)send it to user email
 
-    const resetURL = `${appURL}/api/users/resetPassword/${resetToken}`;
+    const resetURL = `${appURL}/reset-password/${resetToken}`;
 
     try {
         new sendEmail(
