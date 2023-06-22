@@ -2,7 +2,7 @@ const Device = require('../model/deviceModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
-
+/*
 const { PythonShell } = require('python-shell');
 const { spawn } = require('child_process');
 // devices buffer
@@ -78,7 +78,7 @@ exports.getDeviceStatus = catchAsync(async (req, res, next) => {
         },
     });
 });
-
+*/
 exports.createDevice = catchAsync(async (req, res, next) => {
     const resortId = req.user.resort._id;
     const { deviceId } = req.body;

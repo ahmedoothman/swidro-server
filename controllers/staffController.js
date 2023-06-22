@@ -16,6 +16,12 @@ exports.addStaff = catchAsync(async (req, res, next) => {
             )
         );
     }
+    console.log(userName);
+    const notExistUserName = await User.find({ userName });
+    console.log(notExistUserName[0]);
+    if (!!notExistUserName[0]) {
+        return next(new AppError('User name already exist', 400));
+    }
     const newStaffFiltered = {
         userName,
         password,
@@ -23,6 +29,7 @@ exports.addStaff = catchAsync(async (req, res, next) => {
         role,
         email,
         resort: resortId,
+        verified: true,
     };
 
     const newStaff = await User.create(newStaffFiltered);

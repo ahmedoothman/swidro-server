@@ -19,7 +19,7 @@ const signToken = (id) => {
 /* Name : createSendToken */
 /* Description : create token for user then send it */
 /***************************************************************************/
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = async (user, statusCode, res) => {
     const token = signToken(user._id);
     const cookieOptions = {
         expires: new Date(
@@ -31,12 +31,14 @@ const createSendToken = (user, statusCode, res) => {
     res.cookie('jwt', token, cookieOptions);
     // Remove password from output
     user.password = undefined;
-
+    // get resort
+    const resort = await Resort.findOne({ owner: user._id });
     res.status(statusCode).json({
         status: 'success',
         token,
         data: {
             user,
+            resort,
         },
     });
 };
@@ -202,6 +204,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     //3) Check if user still exists
     const currentUser = await User.findById(decoded.id);
+    const resort = await Resort.findOne({ owner: decoded.id });
     if (!currentUser) {
         return next(
             new AppError(
@@ -222,7 +225,10 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     // Grant Access
-    req.user = currentUser;
+    // expand current user and  resort to the request
+    const tempUser = { ...currentUser._doc, resort: resort._doc };
+    req.user = tempUser;
+    // req.user = currentUser;
     res.locals.user = currentUser;
     next();
 });
