@@ -1,4 +1,5 @@
 const Device = require('../model/deviceModel');
+const Swimmers = require('../model/swimmersModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
@@ -73,9 +74,9 @@ exports.getDeviceStatus = catchAsync(async (req, res, next) => {
     // send the result to the client
     res.status(200).json({
         status: 'success',
-        data: {
+        data:
             deviceStatus,
-        },
+        
     });
 });
 */
@@ -92,20 +93,32 @@ exports.createDevice = catchAsync(async (req, res, next) => {
     const newDevice = await Device.create(newDeviceFiltered);
     res.status(200).json({
         status: 'success',
-        data: {
-            newDevice,
-        },
+        data: newDevice,
     });
 });
 exports.getAllDevices = catchAsync(async (req, res, next) => {
     const resortId = req.user.resort._id;
     const devices = await Device.find({ resort: resortId });
+    // search if swimmers have this device today
+    const swimmers = await Swimmers.find({
+        date: {
+            $gte: new Date().setHours(00, 00, 00),
+            $lt: new Date().setHours(23, 59, 59),
+        },
+    });
+    devices.map((device) => {
+        swimmers.map((swimmer) => {
+            if (swimmer.deviceId == device.deviceId) {
+                device.available = false;
+            } else {
+                device.available = true;
+            }
+        });
+    });
     res.status(200).json({
         status: 'success',
         results: devices.length,
-        data: {
-            devices,
-        },
+        data: devices,
     });
 });
 exports.getDevice = factory.getOne(Device);

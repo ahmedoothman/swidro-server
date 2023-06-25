@@ -5,6 +5,7 @@ const morgan = require('morgan'); // 3rd party middleware
 const userRouter = require('./routes/userRoutes');
 const deviceRouter = require('./routes/deviceRoutes');
 const amenitiesRouter = require('./routes/amenitiesRoutes');
+const swimmersRouter = require('./routes/swimmersRoutes');
 const resortRouter = require('./routes/resortRoutes');
 const staffRouter = require('./routes/staffRoutes');
 const adminRouter = require('./routes/adminRoutes');
@@ -52,8 +53,9 @@ app.get('/', (req, res) => {
 // web app
 // app.use('/', express.static(`${__dirname}/view/swidro-test-page`));
 app.use('/api/users', userRouter);
-app.use('/api/device', deviceRouter);
+app.use('/api/devices', deviceRouter);
 app.use('/api/amenities', amenitiesRouter);
+app.use('/api/swimmers', swimmersRouter);
 app.use('/api/resort', resortRouter);
 app.use('/api/staff', staffRouter);
 app.use('/api/admin', adminRouter);
