@@ -64,14 +64,12 @@ exports.createSwimmers = catchAsync(async (req, res, next) => {
 // function that get the swimmers that have been svaved today and with resort id
 exports.getSwimmersByDate = catchAsync(async (req, res, next) => {
     const resortId = req.user.resort._id;
-    const amenity = req.params.amenity;
-    console.log(amenity);
-    if (amenity === 'POOL') {
-        return;
-    }
+    // const amenity = req.params.amenity;
+    // if (amenity === 'POOL') {
+    //     return;
+    // }
     const swimmers = await Swimmers.find({
         resort: resortId,
-        amenity,
         date: {
             $gte: new Date().setHours(00, 00, 00),
             $lt: new Date().setHours(23, 59, 59),

@@ -16,9 +16,7 @@ exports.addStaff = catchAsync(async (req, res, next) => {
             )
         );
     }
-    console.log(userName);
     const notExistUserName = await User.find({ userName });
-    console.log(notExistUserName[0]);
     if (!!notExistUserName[0]) {
         return next(new AppError('User name already exist', 400));
     }
@@ -52,7 +50,33 @@ exports.getAllStaff = catchAsync(async (req, res, next) => {
         data: staff,
     });
 });
+// update staff and save it to run pre save middleware
+exports.updateStaff = catchAsync(async (req, res, next) => {
+    const { userName, password, passwordConfirm, role } = req.body;
+    const staffId = req.params.id;
+    if (!userName || !password || !passwordConfirm || !role) {
+        return next(
+            new AppError(
+                'Please provide userName, password and passwordConfirm',
+                400
+            )
+        );
+    }
+    const staff = await User.findById(staffId);
+    if (!staff) {
+        return next(new AppError('No staff found with that ID', 404));
+    }
+    staff.userName = userName;
+    staff.password = password;
+    staff.passwordConfirm = passwordConfirm;
+    staff.role = role;
+    await staff.save();
+    res.status(200).json({
+        status: 'success',
+        message: 'Staff updated',
+        data: staff,
+    });
+});
 
 exports.getStaff = factory.getOne(User);
-exports.updateStaff = factory.updateOne(User);
 exports.deleteStaff = factory.deleteOne(User);

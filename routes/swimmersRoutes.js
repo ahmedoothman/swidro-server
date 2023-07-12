@@ -6,12 +6,12 @@ const swimmersController = require('../controllers/swimmersController');
 const authController = require('../controllers/authController');
 
 router.use(authController.protect);
+router.get('/getSwimmersToday', swimmersController.getSwimmersByDate);
 router.use(authController.restrictTo('admin', 'owner', 'manager'));
 router
     .route('/')
     .get(swimmersController.getAllSwimmers)
     .post(swimmersController.createSwimmers);
-router.get('/getSwimmersToday/:amenity', swimmersController.getSwimmersByDate);
 router
     .route('/:id')
     .patch(swimmersController.updateSwimmers)

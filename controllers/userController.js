@@ -12,7 +12,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getMe = (req, res, next) => {
-    req.params.id = req.user.id;
+    req.params.id = req.user._id;
     next();
 };
 
@@ -29,10 +29,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
     // 2) Filtered out unwanted fields names that are not allowed to be updated
     const filteredBody = filterObj(req.body, 'userName', 'email');
+    filteredBody.userName = filteredBody.userName.toLowerCase().trim();
     if (req.file) filteredBody.photo = req.file.filename;
     // 3) Update user document
     const updatedUser = await User.findByIdAndUpdate(
-        req.user.id,
+        req.user._id,
         filteredBody,
         {
             new: true,

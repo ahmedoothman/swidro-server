@@ -32,7 +32,12 @@ const createSendToken = async (user, statusCode, res) => {
     // Remove password from output
     user.password = undefined;
     // get resort
-    const resort = await Resort.findOne({ owner: user._id });
+    let resort;
+    if (user.role === 'owner') {
+        resort = await Resort.findOne({ owner: user._id });
+    } else {
+        resort = user.resort;
+    }
     res.status(statusCode).json({
         status: 'success',
         token,
@@ -144,13 +149,14 @@ exports.login = catchAsync(async (req, res, next) => {
     const user = await User.findOne({ userName: userNameLowerCase }).select(
         '+password'
     );
+
     if (!user) {
         return next(new AppError('User Not Found', 400));
     }
     const correct = await user.correctPassword(password, user.password);
 
     if (!user || !correct) {
-        return next(new AppError('Incorrect email or password', 401));
+        return next(new AppError('Incorrect userName or password', 401));
     }
 
     //3) check if the email is verified
@@ -223,10 +229,15 @@ exports.protect = catchAsync(async (req, res, next) => {
             )
         );
     }
-
+    let tempUser;
+    if (currentUser.role === 'admin' || resort) {
+        tempUser = { ...currentUser._doc, resort: resort._doc };
+    } else {
+        const resort = currentUser.resort;
+        tempUser = { currentUser, resort };
+    }
     // Grant Access
     // expand current user and  resort to the request
-    const tempUser = { ...currentUser._doc, resort: resort._doc };
     req.user = tempUser;
     // req.user = currentUser;
     res.locals.user = currentUser;
@@ -257,7 +268,7 @@ exports.restrictTo = (...roles) => {
 /***************************************************************************/
 exports.updatePassword = catchAsync(async (req, res, next) => {
     //1) get user
-    const user = await User.findById(req.user.id).select('+password');
+    const user = await User.findById(req.user._id).select('+password');
     if (!user) {
         return next(new AppError('There is no user with that id.', 404));
     }

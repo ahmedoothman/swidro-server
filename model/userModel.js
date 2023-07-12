@@ -82,7 +82,16 @@ userSchema.pre('save', async function (next) {
         return next();
     }
 });
-
+// pre update check if there  password update it
+// userSchema.pre('findByIdAndUpdate', async function (next) {
+//     if (this._update.password) {
+//         this._update.password = await bcrypt.hash(this._update.password, 12);
+//         this._update.passwordConfirm = undefined;
+//         next();
+//     } else {
+//         return next();
+//     }
+// });
 //add the date of the cahnged password
 userSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.isNew) return next();
@@ -126,8 +135,6 @@ userSchema.methods.createPasswordResetToken = function () {
         .update(resetToken)
         .digest('hex');
 
-    //console.log({ resetToken }, this.passwordResetToken);
-
     this.passwordResetExpires = Date.now() + 10 * 60 * 1000; //expires in 10 mins
 
     return resetToken;
@@ -141,6 +148,9 @@ userSchema.methods.createAccountVerifyToken = function () {
         .digest('hex');
     return verifyToken;
 };
-
+// hash password
+userSchema.statics.hashPassword = async function (password) {
+    return await bcrypt.hash(password, 12);
+};
 const User = mongoose.model('User', userSchema);
 module.exports = User;
